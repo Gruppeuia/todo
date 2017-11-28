@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>ToDo</title>
+    <script src="superfetch2.js"></script>
+</head>
+<body>
+
+<h1>Lister</h1> <hr>
+<p>Hva heter listen</p>
+    
+    
+<div>
+    <input id="inpId" placeholder="Listeid" type="text" value="">
+    <input id="listenavn" placeholder="Listenavn" value="">
+    <textarea id="inpdescr" placeholder="Beskrivelse"></textarea>
+    <input id="tid" placeholder="Tid" value="">
+    <input id="prioritet" placeholder="Prioritet" value="">
+    <input id="status" placeholder="Status" value="">
+        <br> <br>
+    <button onclick="createList()">Lag liste</button>
+    <input id="idslett" placeholder="Skriv inn liste..." value="">
+    <button id="deletelist">Slett liste</button>
+    <br><hr>
+    
+</div>
+    
+     
+<script>  
+        
+    var inpListeId = document.getElementById("inpId");
+    var inpListeNavn = document.getElementById("listenavn");
+    var inpBeskrivelse = document.getElementById("inpdescr");
+    var inpTid = document.getElementById("tid");
+    var inpPrioritet = document.getElementById("prioritet");
+    var inpStatus = document.getElementById("status");
+    var idSlett = document.getElementById("idslett");
+    var btnDelete = document.getElementById("deletelist");
+   
+
+      //success --------------------------------------
+      function succ(data) {        
+        
+        for (var i = 0; i < data.length; i++) {
+            var div = document.createElement("div");
+            div.innerHTML += "<h3>Listeid: " + data[i].listeid + "</h3>";
+            div.innerHTML += "<h3>Listenavn: " + data[i].listenavn + "</h3>";
+            div.innerHTML += "<h3>Beskrivelse: " + data[i].beskrivelse + "</h3>";
+            div.innerHTML += "<h3>Tid: " + data[i].tid + "</h3>";
+            div.innerHTML += "<h3>Prioritet: " + data[i].prioritet + "</h3>";
+            div.innerHTML += "<h3>Status: " + data[i].status + "</h3>";
+            var hr = document.createElement("hr");            
+            document.body.appendChild(div);
+            document.body.appendChild(hr);
+        }
+      }
+    
+    
+    
+    //button click ---------------------------------
+    function createList() {   
+    
+        var upload = JSON.stringify({            
+            listeid: inpListeId.value,
+            listenavn: inpListeNavn.value,
+            beskrivelse: inpBeskrivelse.value,
+            tid: inpTid.value,
+            prioritet: inpPrioritet.value,
+            status: inpStatus.value
+        });
+        
+        var token = JSON.parse(localStorage.getItem("logindata")).token;
+        var url = "http://localhost:8080/ToDo/ToDoListe/?listeid" + token;
+
+        var cfg = {
+            method: "POST",            
+            body: upload
+        }      
+
+        superfetch(url, "json", succ, error, cfg);
+        console.log(succ);
+    }
+    
+   
+
+        //error ----------------------------------------
+        function error(err) {
+            console.log(err);
+        } 
+    
+         btnDelete.onclick = function()  {
+        
+        var token = JSON.parse(localStorage.getItem("logindata")).token;
+        var url = "http://localhost:8080/ToDo/liste/?listeid="  + idSlett.value + "&token" + token;   
+             
+        
+             
+        console.log(url)
+        superfetch(url, "json", delSucc, error, {method: "DELETE"});        
+    }
+            
+    //delete success -------------------------------
+    function delSucc(data) {
+        console.log(data);
+    }
+    
+      
+
+    
+    
+ </script>
+    
+   
+    
+ <style>    
+    
+     input, button, textarea, label, h1, p {        
+        width: 100%;
+        margin-bottom: 8px;
+        height: 40px;
+        font-size: 1.5em;
+        font-family: sans-serif;
+    }  
+     
+</style>
+
+    
+</body>
+</html>

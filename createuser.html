@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>ToDo</title>
+    <script src="superfetch2.js"></script>
+</head>
+<body>
+
+<h1></h1> <hr>
+<p>Lag bruker</p>
+    
+ <input id="inpLoginname" placeholder="Brukernavn" type="text" value="">
+ <input id="inpPassword" placeholder="Passord" value="">
+ <input id="inpFullname" placeholder="Navn" type="text" value="">
+ <button id="btnCreate">Opprett bruker</button>
+  
+    
+    
+
+    
+     
+<script>  
+        
+ 
+    var inpLoginname = document.getElementById("inpLoginname");
+    var inpPassword = document.getElementById("inpPassword");
+    var inpFullname = document.getElementById("inpFullname");    
+    var btnCreate = document.getElementById("btnCreate"); 
+    
+    //button click ---------------------------------
+    btnCreate.onclick = function() {   
+    
+        var upload = JSON.stringify({            
+            loginname: inpLoginname.value,
+            password: inpPassword.value,
+            fullname: inpFullname.value            
+        });
+        
+        var url = "http://localhost:8080/ToDo/login/";
+
+        var cfg = {
+            method: "POST",            
+            body: upload
+        }      
+
+        superfetch(url, "json", succ, error, cfg);
+    }
+    
+        //success --------------------------------------
+    function succ(data) {
+
+        //save logindata/token to localStorage 
+        localStorage.setItem("logindata", JSON.stringify(data));
+    }
+    
+    //error ----------------------------------------
+    function error(err) {
+        console.log(err);
+    }
+
+ 
+    
+ </script>
+    
+   
+    
+ <style>    
+    
+</style>
+
+    
+</body>
+</html>
